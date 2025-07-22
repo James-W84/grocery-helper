@@ -1,0 +1,39 @@
+# Go build files
+*.exe
+*.out
+*.test
+
+# Go cache and module artifacts
+bin/
+vendor/
+*.mod
+*.sum
+
+# Editor/OS-specific
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Dependency tools
+coverage.out
+
+# Environment files
+.env
+.env.*
+
+# Local SQLite DBs
+*.db
+
+# Dev/test data
+/tmp/
+*.log
+*.bak
+*.old
+*.lock
+*.local
+
+# Binaries (by convention)
+main
+server
+backend
