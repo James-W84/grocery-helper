@@ -62,7 +62,7 @@ This creates a `server` executable in the current directory.
 Run directly with Go:
 
 ```bash
-go run server.go
+go run .
 ```
 
 ### Production Mode
@@ -70,7 +70,7 @@ go run server.go
 First build the application, then run the executable:
 
 ```bash
-go build -o server server.go
+go build -o server .
 ./server
 ```
 
