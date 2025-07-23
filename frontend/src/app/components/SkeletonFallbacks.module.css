@@ -9,6 +9,7 @@
 }
 
 .skeleton {
+  animation: shimmer 1.2s ease-in-out infinite;
   background: #f6f7f8;
   background-image: linear-gradient(
     90deg,
@@ -16,30 +17,30 @@
     #edeef1 40px,
     #f6f7f8 80px
   );
-  background-size: 200px 100%;
   background-repeat: no-repeat;
-  animation: shimmer 1.2s ease-in-out infinite;
+  background-size: 200px 100%;
 }
 
 /* Stores Tabs Skeleton */
 .tabContainer {
   display: flex;
   gap: 0.5rem;
-  padding: 0 1rem;
   margin-bottom: 1rem;
+  padding: 0 1rem;
 }
 
 .tabSkeleton {
-  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
   background-color: #f5f5f5;
   border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
 }
 
 .tabTextSkeleton {
+  animation: shimmer 1.2s ease-in-out infinite;
   background: #f6f7f8;
   background-image: linear-gradient(
     90deg,
@@ -47,15 +48,15 @@
     #edeef1 40px,
     #f6f7f8 80px
   );
-  background-size: 200px 100%;
   background-repeat: no-repeat;
-  animation: shimmer 1.2s ease-in-out infinite;
-  width: 80px;
-  height: 16px;
+  background-size: 200px 100%;
   border-radius: 4px;
+  height: 16px;
+  width: 80px;
 }
 
 .tabCountSkeleton {
+  animation: shimmer 1.2s ease-in-out infinite;
   background: #f6f7f8;
   background-image: linear-gradient(
     90deg,
@@ -63,12 +64,11 @@
     #edeef1 40px,
     #f6f7f8 80px
   );
-  background-size: 200px 100%;
   background-repeat: no-repeat;
-  animation: shimmer 1.2s ease-in-out infinite;
-  width: 24px;
-  height: 14px;
+  background-size: 200px 100%;
   border-radius: 4px;
+  height: 14px;
+  width: 24px;
 }
 
 /* Items List Skeleton */
@@ -77,15 +77,16 @@
 }
 
 .storeHeaderSkeleton {
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e0e0e0;
 }
 
 .storeTitleSkeleton {
+  animation: shimmer 1.2s ease-in-out infinite;
   background: #f6f7f8;
   background-image: linear-gradient(
     90deg,
@@ -93,12 +94,11 @@
     #edeef1 40px,
     #f6f7f8 80px
   );
-  background-size: 200px 100%;
   background-repeat: no-repeat;
-  animation: shimmer 1.2s ease-in-out infinite;
-  width: 200px;
-  height: 28px;
+  background-size: 200px 100%;
   border-radius: 4px;
+  height: 28px;
+  width: 200px;
 }
 
 .statsSkeleton {
@@ -107,6 +107,7 @@
 }
 
 .statItemSkeleton {
+  animation: shimmer 1.2s ease-in-out infinite;
   background: #f6f7f8;
   background-image: linear-gradient(
     90deg,
@@ -114,12 +115,11 @@
     #edeef1 40px,
     #f6f7f8 80px
   );
-  background-size: 200px 100%;
   background-repeat: no-repeat;
-  animation: shimmer 1.2s ease-in-out infinite;
-  width: 80px;
-  height: 16px;
+  background-size: 200px 100%;
   border-radius: 4px;
+  height: 16px;
+  width: 80px;
 }
 
 .itemsContainer {
@@ -136,14 +136,14 @@
   background: white;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
 }
 
 .itemContentSkeleton {
+  align-items: flex-start;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
 }
 
 .itemInfoSkeleton {
@@ -152,6 +152,7 @@
 }
 
 .itemNameSkeleton {
+  animation: shimmer 1.2s ease-in-out infinite;
   background: #f6f7f8;
   background-image: linear-gradient(
     90deg,
@@ -159,16 +160,16 @@
     #edeef1 40px,
     #f6f7f8 80px
   );
-  background-size: 200px 100%;
   background-repeat: no-repeat;
-  animation: shimmer 1.2s ease-in-out infinite;
-  width: 140px;
-  height: 20px;
+  background-size: 200px 100%;
   border-radius: 4px;
+  height: 20px;
   margin-bottom: 0.5rem;
+  width: 140px;
 }
 
 .itemQuantitySkeleton {
+  animation: shimmer 1.2s ease-in-out infinite;
   background: #f6f7f8;
   background-image: linear-gradient(
     90deg,
@@ -176,12 +177,11 @@
     #edeef1 40px,
     #f6f7f8 80px
   );
-  background-size: 200px 100%;
   background-repeat: no-repeat;
-  animation: shimmer 1.2s ease-in-out infinite;
-  width: 100px;
-  height: 16px;
+  background-size: 200px 100%;
   border-radius: 4px;
+  height: 16px;
+  width: 100px;
 }
 
 .itemActionsSkeleton {
@@ -191,6 +191,7 @@
 }
 
 .buttonSkeleton {
+  animation: shimmer 1.2s ease-in-out infinite;
   background: #f6f7f8;
   background-image: linear-gradient(
     90deg,
@@ -198,10 +199,9 @@
     #edeef1 40px,
     #f6f7f8 80px
   );
-  background-size: 200px 100%;
   background-repeat: no-repeat;
-  animation: shimmer 1.2s ease-in-out infinite;
-  width: 100px;
-  height: 32px;
+  background-size: 200px 100%;
   border-radius: 4px;
+  height: 32px;
+  width: 100px;
 }

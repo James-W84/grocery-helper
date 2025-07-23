@@ -13,6 +13,7 @@ interface StoresTabsProps {
   activeStoreId: number;
   itemsCount: number;
   onStoreChange: (storeId: number) => void;
+  setIsStoreModalOpen: (isStoreModalOpen: boolean) => void;
 }
 
 export default function StoresTabs({
@@ -20,6 +21,7 @@ export default function StoresTabs({
   activeStoreId,
   itemsCount,
   onStoreChange,
+  setIsStoreModalOpen,
 }: StoresTabsProps) {
   return (
     <div className={styles.tabContainer}>
@@ -34,12 +36,11 @@ export default function StoresTabs({
           }}
         >
           {store.name}
-          <span className={styles.itemCount}>({itemsCount || 0})</span>
         </button>
       ))}
       <button
         className={`${styles.tab} ${styles.addTab}`}
-        onClick={() => console.log("add")}
+        onClick={() => setIsStoreModalOpen(true)}
       >
         + Add New Store
       </button>

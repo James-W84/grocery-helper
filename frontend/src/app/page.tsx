@@ -10,6 +10,7 @@ import {
   ItemsListSkeleton,
   StoresTabsSkeleton,
 } from "./components/SkeletonFallbacks";
+import AddStoreModal from "./components/AddStoreModal";
 
 // Mock data based on backend models
 interface Item {
@@ -31,6 +32,7 @@ export default function Home() {
   const userID = process.env.USER_ID || 1;
   const [activeStoreId, setActiveStoreId] = useState<number>(1);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isStoreModalOpen, setIsStoreModalOpen] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
   const [stores, setStores] = useState<Store[]>([]);
   const [loadingData, setLoadingData] = useState<boolean>(true);
@@ -74,7 +76,20 @@ export default function Home() {
   }) => {
     try {
       const result = await axios.post(`${apiURL}/item`, itemData);
-      items.push(result.data);
+      setItems([...items, result.data]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAddStore = async (name: string) => {
+    try {
+      const result = await axios.post(`${apiURL}/store`, {
+        name,
+        userID,
+      });
+      setStores([...stores, result.data]);
+      setActiveStoreId(result.data.id);
     } catch (error) {
       console.error(error);
     }
@@ -132,6 +147,7 @@ export default function Home() {
           activeStoreId={activeStoreId}
           itemsCount={items.length}
           onStoreChange={setActiveStoreId}
+          setIsStoreModalOpen={setIsStoreModalOpen}
         />
       )}
 
@@ -154,6 +170,13 @@ export default function Home() {
           onClose={() => setIsAddModalOpen(false)}
           onAddItem={handleAddItem}
         />
+      )}
+
+      {isStoreModalOpen && (
+        <AddStoreModal
+          onClose={() => setIsStoreModalOpen(false)}
+          onAddStore={handleAddStore}
+        ></AddStoreModal>
       )}
     </div>
   );
