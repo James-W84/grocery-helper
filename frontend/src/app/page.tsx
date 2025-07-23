@@ -1,9 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import AddItemModal from "./components/AddItemModal";
+import StoresTabs from "./components/StoresTabs";
+import ItemsList from "./components/ItemsList";
 import axios from "axios";
+import {
+  ItemsListSkeleton,
+  StoresTabsSkeleton,
+} from "./components/SkeletonFallbacks";
 
 // Mock data based on backend models
 interface Item {
@@ -27,6 +33,8 @@ export default function Home() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
   const [stores, setStores] = useState<Store[]>([]);
+  const [loadingData, setLoadingData] = useState<boolean>(true);
+  const [loadingItems, setLoadingItems] = useState<boolean>(true);
 
   const activeStore = stores.find((store) => store.id === activeStoreId);
 
@@ -35,6 +43,7 @@ export default function Home() {
       try {
         const response = await axios.get(`${apiURL}/stores/${userID}`);
         setStores(response.data);
+        setLoadingData(false);
       } catch (error) {
         console.error(error);
       }
@@ -45,10 +54,12 @@ export default function Home() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
+        setLoadingItems(true);
         const response = await axios.get(
           `${apiURL}/stores/${activeStoreId}/items`
         );
-        setItems(response.data);
+        setItems(response.data || []);
+        setLoadingItems(false);
       } catch (error) {
         console.error(error);
       }
@@ -113,88 +124,28 @@ export default function Home() {
           + Add New Item
         </button>
       </header>
+      {loadingData ? (
+        <StoresTabsSkeleton />
+      ) : (
+        <StoresTabs
+          stores={stores}
+          activeStoreId={activeStoreId}
+          itemsCount={items.length}
+          onStoreChange={setActiveStoreId}
+        />
+      )}
 
-      <div className={styles.tabContainer}>
-        {stores.map((store) => (
-          <button
-            key={store.id}
-            className={`${styles.tab} ${
-              activeStoreId === store.id ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveStoreId(store.id)}
-          >
-            {store.name}
-            <span className={styles.itemCount}>({items.length || 0})</span>
-          </button>
-        ))}
-      </div>
-
-      <main className={styles.main}>
-        <div className={styles.storeHeader}>
-          <h2>{activeStore?.name} Shopping List</h2>
-          <div className={styles.stats}>
-            <span className={styles.statItem}>Total: {items.length}</span>
-            <span className={styles.statItem}>
-              Purchased: {items.filter((item) => item.purchased).length}
-            </span>
-            <span className={styles.statItem}>
-              Remaining: {items.filter((item) => !item.purchased).length}
-            </span>
-          </div>
-        </div>
-
-        <div className={styles.itemsContainer}>
-          {items.length === 0 ? (
-            <div className={styles.emptyState}>
-              <p>No items in this store yet.</p>
-              <button
-                className={styles.addFirstItem}
-                onClick={() => setIsAddModalOpen(true)}
-              >
-                Add your first item
-              </button>
-            </div>
-          ) : (
-            <div className={styles.itemsList}>
-              {items.map((item) => (
-                <div
-                  key={item.id}
-                  className={`${styles.itemCard} ${
-                    item.purchased ? styles.purchased : ""
-                  }`}
-                >
-                  <div className={styles.itemContent}>
-                    <div className={styles.itemInfo}>
-                      <h3 className={styles.itemName}>{item.name}</h3>
-                      <p className={styles.itemQuantity}>
-                        Quantity: {item.quantity}
-                      </p>
-                    </div>
-                    <div className={styles.itemActions}>
-                      <button
-                        className={`${styles.toggleButton} ${
-                          item.purchased
-                            ? styles.unpurchaseButton
-                            : styles.purchaseButton
-                        }`}
-                        onClick={() => toggleItemPurchased(item.id)}
-                      >
-                        {item.purchased ? "↩️ Unpurchase" : "✅ Purchase"}
-                      </button>
-                      <button
-                        className={styles.deleteButton}
-                        onClick={() => deleteItem(item.id)}
-                      >
-                        🗑️ Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
+      {loadingItems ? (
+        <ItemsListSkeleton />
+      ) : (
+        <ItemsList
+          items={items}
+          activeStore={activeStore}
+          onToggleItem={toggleItemPurchased}
+          onDeleteItem={deleteItem}
+          onAddFirstItem={() => setIsAddModalOpen(true)}
+        />
+      )}
 
       {isAddModalOpen && (
         <AddItemModal
