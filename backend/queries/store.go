@@ -155,7 +155,7 @@ func GetStoreItems(db *sql.DB, storeID int) ([]models.Item, error) {
 		FROM items i
 		INNER JOIN store_items si ON i.id = si.item_id
 		WHERE si.store_id = ?
-		ORDER BY i.name
+		ORDER BY i.created
 	`
 
 	rows, err := db.Query(query, storeID)

@@ -33,6 +33,20 @@ func CreateItem(db *sql.DB, name string, quantity int) (*models.Item, error) {
 	return item, nil
 }
 
+func DeleteItem(db *sql.DB, itemID int) error {
+	result, err := db.Exec("DELETE FROM items WHERE id = ?", itemID)
+
+	if err != nil {
+		return fmt.Errorf("error deleting item: %v", err)
+	}
+
+	if rows, _ := result.RowsAffected(); rows == 0 {
+		return errors.New("item not found")
+	}
+
+	return nil
+}
+
 // AddItemToStore adds an item to a store
 func AddItemToStore(db *sql.DB, storeID, itemID int) error {
 	// Check if the store exists
@@ -84,6 +98,20 @@ func RemoveItemFromStore(db *sql.DB, storeID, itemID int) error {
 
 func PurchaseItem(db *sql.DB, itemId int) (error) {
 	result, err := db.Exec("UPDATE items SET purchased = 1 WHERE id = ?", itemId)
+
+	if err != nil {
+		return fmt.Errorf("error marking item as purchased: %v", err)
+	}
+
+	if rows, _ := result.RowsAffected(); rows == 0 {
+		return fmt.Errorf("no such item found")
+	}
+
+	return nil
+}
+
+func UnpurchaseItem(db *sql.DB, itemId int) (error) {
+	result, err := db.Exec("UPDATE items SET purchased = 0 WHERE id = ?", itemId)
 
 	if err != nil {
 		return fmt.Errorf("error marking item as purchased: %v", err)

@@ -31,10 +31,6 @@ func CreateStoreHandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 
-type StoreIdPayload struct {
-	StoreID int `json:"storeid"`
-}
-
 func GetStoreItemsHandler(db *sql.DB) http.HandlerFunc {
 	return func (w http.ResponseWriter, r *http.Request) {
 

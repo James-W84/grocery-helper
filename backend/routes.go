@@ -14,4 +14,7 @@ func RegisterRoutes(router *mux.Router, db *sql.DB) {
 	router.HandleFunc("/stores/{store_id}/items", handlers.GetStoreItemsHandler(db)).Methods("GET")
 	router.HandleFunc("/item", handlers.CreateItemHandler(db)).Methods("POST")
 	router.HandleFunc("/purchase/{item_id}", handlers.PurchaseItemHandler(db)).Methods("GET")
+	router.HandleFunc("/unpurchase/{item_id}", handlers.UnpurchaseItemHandler(db)).Methods("GET")
+	router.HandleFunc("/stores/{user_id}", handlers.GetUserStoresHandler(db)).Methods("GET")
+	router.HandleFunc("/item/{item_id}", handlers.DeleteItemHandler(db)).Methods("DELETE")
 }

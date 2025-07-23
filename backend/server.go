@@ -9,6 +9,7 @@ import (
 	"github.com/James-W84/grocery-helper/backend/queries"
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/rs/cors"
 )
 
 
@@ -30,9 +31,16 @@ func main() {
 	router.HandleFunc("/tables", ListTablesHandler(db)).Methods("GET")
 	RegisterRoutes(router, db)
 
+	routerCORS := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"}, // or ["*"] for all
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}).Handler(router)
+
 
 	log.Println("Server running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":8080", routerCORS))
 }
 
 func ListTablesHandler(db *sql.DB) http.HandlerFunc { 

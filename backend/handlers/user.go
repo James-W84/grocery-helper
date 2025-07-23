@@ -6,9 +6,11 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/James-W84/grocery-helper/backend/models"
 	"github.com/James-W84/grocery-helper/backend/queries"
+	"github.com/gorilla/mux"
 )
 
 
@@ -53,5 +55,29 @@ func LoginUserHandler(db *sql.DB) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(loginUser)
+	}
+}
+
+func GetUserStoresHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		userIDStr := vars["user_id"]
+
+		userID, err := strconv.Atoi(userIDStr)
+
+		if err != nil {
+			http.Error(w, "Invalid store ID", http.StatusBadRequest)
+			return
+		}
+
+		stores, err := queries.GetStoresByUserID(db, userID)
+
+		if err != nil {
+			http.Error(w, "Error getting stores", http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(stores)
 	}
 }

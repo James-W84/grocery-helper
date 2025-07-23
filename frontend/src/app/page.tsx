@@ -20,96 +20,6 @@ interface Store {
   userId: number;
 }
 
-const mockStores: Store[] = [
-  { id: 1, name: "Walmart", userId: 1 },
-  { id: 2, name: "Target", userId: 1 },
-  { id: 3, name: "Whole Foods", userId: 1 },
-  { id: 4, name: "Costco", userId: 1 },
-];
-
-const mockItems: Record<number, Item[]> = {
-  1: [
-    { id: 1, name: "Milk", quantity: 1, purchased: false, created: new Date() },
-    { id: 2, name: "Bread", quantity: 2, purchased: true, created: new Date() },
-    {
-      id: 3,
-      name: "Eggs",
-      quantity: 12,
-      purchased: false,
-      created: new Date(),
-    },
-    {
-      id: 4,
-      name: "Chicken Breast",
-      quantity: 1,
-      purchased: false,
-      created: new Date(),
-    },
-  ],
-  2: [
-    {
-      id: 5,
-      name: "Shampoo",
-      quantity: 1,
-      purchased: false,
-      created: new Date(),
-    },
-    {
-      id: 6,
-      name: "Toothpaste",
-      quantity: 1,
-      purchased: true,
-      created: new Date(),
-    },
-    {
-      id: 7,
-      name: "Paper Towels",
-      quantity: 3,
-      purchased: false,
-      created: new Date(),
-    },
-  ],
-  3: [
-    {
-      id: 8,
-      name: "Organic Apples",
-      quantity: 5,
-      purchased: false,
-      created: new Date(),
-    },
-    {
-      id: 9,
-      name: "Quinoa",
-      quantity: 1,
-      purchased: false,
-      created: new Date(),
-    },
-    {
-      id: 10,
-      name: "Almond Milk",
-      quantity: 1,
-      purchased: true,
-      created: new Date(),
-    },
-  ],
-  4: [
-    {
-      id: 11,
-      name: "Bulk Rice",
-      quantity: 1,
-      purchased: false,
-      created: new Date(),
-    },
-    {
-      id: 12,
-      name: "Frozen Berries",
-      quantity: 2,
-      purchased: false,
-      created: new Date(),
-    },
-  ],
-};
-
 export default function Home() {
   const apiURL = process.env.PUBLIC_API_URL || "http://localhost:8080";
   const userID = process.env.USER_ID || 1;
@@ -119,7 +29,6 @@ export default function Home() {
   const [stores, setStores] = useState<Store[]>([]);
 
   const activeStore = stores.find((store) => store.id === activeStoreId);
-  const activeItems = items[activeStoreId] || [];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -144,41 +53,53 @@ export default function Home() {
         console.error(error);
       }
     };
+    fetchItems();
   }, [activeStoreId, apiURL]);
 
-  const handleAddItem = (itemData: {
+  const handleAddItem = async (itemData: {
     name: string;
     quantity: number;
-    storeId: number;
+    storeid: number;
   }) => {
-    const newItem: Item = {
-      id: Date.now(), // Simple ID generation for mock
-      name: itemData.name,
-      quantity: itemData.quantity,
-      purchased: false,
-      created: new Date(),
-    };
-
-    setItems((prev) => ({
-      ...prev,
-      [itemData.storeId]: [...(prev[itemData.storeId] || []), newItem],
-    }));
+    try {
+      const result = await axios.post(`${apiURL}/item`, itemData);
+      items.push(result.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const toggleItemPurchased = (itemId: number) => {
-    setItems((prev) => ({
-      ...prev,
-      [activeStoreId]: prev[activeStoreId].map((item) =>
-        item.id === itemId ? { ...item, purchased: !item.purchased } : item
-      ),
-    }));
+  const toggleItemPurchased = async (itemId: number) => {
+    let item = items.find((item) => item.id === itemId);
+
+    if (item === undefined) {
+      console.error("Item not found in client");
+      return;
+    }
+
+    try {
+      if (item.purchased) {
+        await axios.get(`${apiURL}/unpurchase/${itemId}`);
+      } else {
+        await axios.get(`${apiURL}/purchase/${itemId}`);
+      }
+      setItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId ? { ...item, purchased: !item.purchased } : item
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const deleteItem = (itemId: number) => {
-    setItems((prev) => ({
-      ...prev,
-      [activeStoreId]: prev[activeStoreId].filter((item) => item.id !== itemId),
-    }));
+  const deleteItem = async (itemId: number) => {
+    try {
+      await axios.delete(`${apiURL}/item/${itemId}`);
+      setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -277,7 +198,7 @@ export default function Home() {
 
       {isAddModalOpen && (
         <AddItemModal
-          stores={mockStores}
+          stores={stores}
           activeStoreId={activeStoreId}
           onClose={() => setIsAddModalOpen(false)}
           onAddItem={handleAddItem}
